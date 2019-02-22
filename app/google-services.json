@@ -1,0 +1,151 @@
+{
+  "project_info": {
+    "project_number": "1088675100990",
+    "firebase_url": "https://kangaroorooms-288e3.firebaseio.com",
+    "project_id": "kangaroorooms-288e3",
+    "storage_bucket": "kangaroorooms-288e3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1088675100990:android:e2d1f2305f41ae1b",
+        "android_client_info": {
+          "package_name": "com.architectica.kangaroorooms.theadminapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1088675100990-ilmulefo768hu2a2i369boefdgn9nd9i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.architectica.kangaroorooms.theadminapp",
+            "certificate_hash": "2214f3e55efbf07eb41295f384873f536df754b9"
+          }
+        },
+        {
+          "client_id": "1088675100990-cdr47189qajsn98h25nionagqce5fbar.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6Eqa5e_YoTZcbu8lQ5QexDHiCWs03EpI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1088675100990-cdr47189qajsn98h25nionagqce5fbar.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1088675100990:android:a4e09edcd9baeb7d",
+        "android_client_info": {
+          "package_name": "com.architectica.rental05.thevendorsapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1088675100990-oct03qg38pdc8b0940i3l1m0c0nl3o24.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.architectica.rental05.thevendorsapp",
+            "certificate_hash": "94c31b3db906e3a0269bd7d39fbbb54296990015"
+          }
+        },
+        {
+          "client_id": "1088675100990-qn1g3lc3uvo4jduoarlgk2vsud51gnc8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.architectica.rental05.thevendorsapp",
+            "certificate_hash": "2214f3e55efbf07eb41295f384873f536df754b9"
+          }
+        },
+        {
+          "client_id": "1088675100990-cdr47189qajsn98h25nionagqce5fbar.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6Eqa5e_YoTZcbu8lQ5QexDHiCWs03EpI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1088675100990-cdr47189qajsn98h25nionagqce5fbar.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1088675100990:android:7b6409948e50eee5",
+        "android_client_info": {
+          "package_name": "com.aryan.android.kangaroocust"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1088675100990-jpeva738ouqc4ll2n56gjd2hrtbn5n53.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aryan.android.kangaroocust",
+            "certificate_hash": "6addc45b762ec8f30f8bed86a676edac134901ca"
+          }
+        },
+        {
+          "client_id": "1088675100990-cdr47189qajsn98h25nionagqce5fbar.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6Eqa5e_YoTZcbu8lQ5QexDHiCWs03EpI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1088675100990-cdr47189qajsn98h25nionagqce5fbar.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

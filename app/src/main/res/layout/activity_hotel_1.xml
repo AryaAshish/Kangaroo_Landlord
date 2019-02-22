@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HotelActivity_1">
+
+    <ImageView
+        android:id="@+id/vehiclesImage"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="fitXY" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:id="@+id/layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/transparent_img"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:onClick="displayImages"
+                android:scaleType="fitXY"
+                android:src="@android:color/transparent" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:padding="10dp">
+
+
+                <TextView
+                    android:id="@+id/vehiclesName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" Hotel Bridge"
+                    android:textColor="#000"
+                    android:textStyle="bold"
+                    android:textSize="15sp" />
+
+                <ImageView
+                    android:id="@+id/location_img"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_below="@id/vehiclesName"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="25dp"
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/ic_map" />
+
+
+                <TextView
+                    android:id="@+id/vendorName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/location_img"
+                    android:layout_marginTop="40dp"
+                    android:text="Landlord name"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/vendorsParkingAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/location_img"
+                    android:layout_below="@+id/vendorName"
+                    android:text="Ashram Road Ellisbridge"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/NoOfVehiclesWithThisVendorTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/location_img"
+                    android:layout_below="@+id/vendorsParkingAddress"
+                    android:text="No of rooms : "
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/NoOfVehiclesWithThisVendor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/NoOfVehiclesWithThisVendorTextView"
+                    android:layout_below="@+id/vendorsParkingAddress"
+                    android:text="1"
+                    android:textSize="15sp" />
+
+
+                <TextView
+                    android:id="@+id/vehicleCity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/NoOfVehiclesWithThisVendor"
+                    android:layout_toRightOf="@+id/location_img"
+                    android:text="Ahmedabad"
+                    android:textSize="15sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/bookingDetailsLayout"
+                android:background="@android:color/white"
+                android:padding="10dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/bookingDetailsTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000"
+                    android:textStyle="bold"
+                    android:text="Booking Details:" />
+
+                <TextView
+                    android:id="@+id/orderIdTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000"
+                    android:textStyle="bold"
+                    android:layout_below="@+id/bookingDetailsTextView"
+                    android:text="Order Id:" />
+
+                <TextView
+                    android:id="@+id/orderId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/bookingDetailsTextView"
+                    android:layout_toRightOf="@+id/orderIdTextView"
+                    android:layout_marginLeft="10dp"
+                    android:text="TextView" />
+
+                <TextView
+                    android:id="@+id/transactionAmountTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000"
+                    android:textStyle="bold"
+                    android:layout_below="@+id/orderIdTextView"
+                    android:text="Txn Amount:" />
+
+                <TextView
+                    android:id="@+id/transactionAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/orderIdTextView"
+                    android:layout_toRightOf="@+id/transactionAmountTextView"
+                    android:layout_marginLeft="10dp"
+                    android:text="TextView" />
+
+                <TextView
+                    android:id="@+id/transactionIdTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000"
+                    android:textStyle="bold"
+                    android:layout_below="@+id/transactionAmountTextView"
+                    android:text="Txn Id:" />
+
+                <TextView
+                    android:id="@+id/transactionId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/transactionAmountTextView"
+                    android:layout_toRightOf="@+id/transactionIdTextView"
+                    android:layout_marginLeft="10dp"
+                    android:text="TextView" />
+
+                <TextView
+                    android:id="@+id/bankNameTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000"
+                    android:textStyle="bold"
+                    android:layout_below="@+id/transactionIdTextView"
+                    android:text="Bank Name:" />
+
+                <TextView
+                    android:id="@+id/bankName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/transactionIdTextView"
+                    android:layout_toRightOf="@+id/bankNameTextView"
+                    android:layout_marginLeft="10dp"
+                    android:text="TextView" />
+
+                <TextView
+                    android:id="@+id/bankTxnIdTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000"
+                    android:textStyle="bold"
+                    android:layout_below="@+id/bankNameTextView"
+                    android:text="Bank Txn Id:" />
+
+                <TextView
+                    android:id="@+id/bankTxnId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/bankNameTextView"
+                    android:layout_toRightOf="@+id/bankTxnIdTextView"
+                    android:layout_marginLeft="10dp"
+                    android:text="TextView" />
+
+                <TextView
+                    android:id="@+id/PickUpTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000"
+                    android:textStyle="bold"
+                    android:layout_below="@+id/bankTxnIdTextView"
+                    android:text="PickUp:" />
+
+                <TextView
+                    android:id="@+id/PickUp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/bankTxnId"
+                    android:layout_toRightOf="@+id/PickUpTextView"
+                    android:layout_marginLeft="10dp"
+                    android:text="TextView" />
+                <TextView
+                    android:id="@+id/deliveryTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000"
+                    android:textStyle="bold"
+                    android:layout_below="@+id/PickUpTextView"
+                    android:text="Delivery:" />
+
+                <TextView
+                    android:id="@+id/Delivery"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/PickUp"
+                    android:layout_toRightOf="@+id/deliveryTextView"
+                    android:layout_marginLeft="10dp"
+                    android:text="TextView" />
+
+                <TextView
+                    android:id="@+id/bookingHoursTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000"
+                    android:textStyle="bold"
+                    android:layout_below="@+id/deliveryTextView"
+                    android:text="Booking Hours:" />
+
+
+                <TextView
+                    android:id="@+id/bookingHours"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/Delivery"
+                    android:layout_toRightOf="@+id/bookingHoursTextView"
+                    android:layout_marginLeft="10dp"
+                    android:text="TextView" />
+
+                <TextView
+                    android:id="@+id/userNameTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000"
+                    android:textStyle="bold"
+                    android:layout_below="@+id/bookingHoursTextView"
+                    android:text="Booked UserName:" />
+
+
+                <TextView
+                    android:id="@+id/userName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/bookingHours"
+                    android:layout_toRightOf="@+id/userNameTextView"
+                    android:layout_marginLeft="10dp"
+                    android:text="TextView" />
+
+                <TextView
+                    android:id="@+id/bookingDateTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000"
+                    android:textStyle="bold"
+                    android:layout_below="@+id/userNameTextView"
+                    android:text="Bookeing Date:" />
+
+
+                <TextView
+                    android:id="@+id/bookingDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/userName"
+                    android:layout_toRightOf="@+id/bookingDateTextView"
+                    android:layout_marginLeft="10dp"
+                    android:text="TextView" />
+
+                <TextView
+                    android:id="@+id/totalAmountTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000"
+                    android:textStyle="bold"
+                    android:layout_below="@+id/bookingDateTextView"
+                    android:text="Total Amount:" />
+
+
+                <TextView
+                    android:id="@+id/totalAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/bookingDate"
+                    android:layout_toRightOf="@+id/totalAmountTextView"
+                    android:layout_marginLeft="10dp"
+                    android:text="TextView" />
+
+                <TextView
+                    android:id="@+id/balanceAmountTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000"
+                    android:textStyle="bold"
+                    android:layout_below="@+id/totalAmountTextView"
+                    android:text="Balance Amount:" />
+
+
+                <TextView
+                    android:id="@+id/balanceAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/totalAmountTextView"
+                    android:layout_toRightOf="@+id/balanceAmountTextView"
+                    android:layout_marginLeft="10dp"
+                    android:text="TextView" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@android:color/transparent">
+
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:id="@+id/toolbar_transparent"
+            android:background="@android:color/transparent"
+            app:theme="@style/FirstRumTheme1"/>
+    </android.support.design.widget.AppBarLayout>
+
+</RelativeLayout>

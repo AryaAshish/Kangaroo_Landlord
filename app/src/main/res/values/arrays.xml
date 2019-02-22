@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="random_imgs">
+        <item>@drawable/afghanistan</item>
+        <item>@drawable/albania</item>
+        <item>@drawable/algeria</item>
+        <item>@drawable/americansamoa</item>
+        <item>@drawable/andorra</item>
+        <item>@drawable/angola</item>
+        <item>@drawable/anguilla</item>
+        <item>@drawable/antiguaandbarbuda</item>
+        <item>@drawable/argentina</item>
+        <item>@drawable/armenia</item>
+        <item>@drawable/aruba</item>
+        <item>@drawable/austria</item>
+        <item>@drawable/azerbaijan</item>
+        <item>@drawable/bahamas</item>
+        <item>@drawable/bahrain</item>
+        <item>@drawable/bangladesh</item>
+        <item>@drawable/barbados</item>
+        <item>@drawable/belarus</item>
+        <item>@drawable/belgium</item>
+        <item>@drawable/belize</item>
+    </integer-array>
+
+</resources>
