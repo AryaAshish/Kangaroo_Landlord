@@ -44,6 +44,7 @@ public class VehiclesForRentActivity extends AppCompatActivity {
     DatabaseReference mDatabaseReference,mReference;
     List<String> vehicleType;
     List<String> parkingAddresses;
+    static List<String> roomStatuses;
     String isAddedToFavourites;
     String image;
     String data;
@@ -83,6 +84,7 @@ public class VehiclesForRentActivity extends AppCompatActivity {
         vehicleType = new ArrayList<String>();
         parkingAddresses = new ArrayList<String>();
         noOfParkingAddresses = new ArrayList<Integer>();
+        roomStatuses = new ArrayList<String>();
         HotelAdapter.content = "UploadedVehicles";
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -97,7 +99,7 @@ public class VehiclesForRentActivity extends AppCompatActivity {
         pd.setCanceledOnTouchOutside(false);
         pd.show();
 
-        mReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        mReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChild("UploadedVehicles")){
@@ -125,6 +127,7 @@ public class VehiclesForRentActivity extends AppCompatActivity {
                             bankTxnId.clear();
                             txnAmount.clear();
                             mBlock.clear();
+                            roomStatuses.clear();
                             int k = 0;
 
                             for (DataSnapshot chidSnap : dataSnapshot.getChildren()) {
@@ -134,6 +137,7 @@ public class VehiclesForRentActivity extends AppCompatActivity {
                                 mPricePerDay.add(chidSnap.child("PricePerDay").getValue(String.class));
                                 mCity.add(chidSnap.child("City").getValue(String.class));
                                 vehicleType.add(chidSnap.child("VehicleType").getValue(String.class));
+                                roomStatuses.add(chidSnap.child("status").getValue(String.class));
                                 mVehicleLocations.add(chidSnap.child("ParkingAddress").getValue(String.class));
                                 mDelete.add(R.drawable.ic_delete_black_24dp);
                                 if ("true".equals(chidSnap.child("isVehicleBlocked").getValue(String.class))){

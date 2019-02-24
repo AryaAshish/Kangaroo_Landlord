@@ -3,6 +3,7 @@
     <string name="verify_info_1">A 6-Digit Verification Code will be sent via SMS\n
     to verify your mobile number</string>
     <string name="verify_info_2">No Verification Code required for Login</string>
+    <string name="idText">You can submit Aadhar card,pan card or any other government approved document.</string>
     <string name="agree">By creating account, I agree to Kangaroo Landlords\'s
     <![CDATA[<br><font color="#E53935">Terms and Conditions</font> and <font color="#E53935">Privacy Policy</font>]]></string>
     <string name="dent_allow_sms">Allow <b>Kangaroo Landlords</b> to send and view SMS

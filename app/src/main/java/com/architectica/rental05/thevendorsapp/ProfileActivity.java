@@ -1,13 +1,17 @@
 package com.architectica.rental05.thevendorsapp;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,6 +24,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -30,6 +35,7 @@ import java.io.IOException;
 public class ProfileActivity extends AppCompatActivity {
 
     //String vendorUid;
+    private final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     DatabaseReference vendorReference;
     EditText firstName,lastName,address,aadharNumber;
     ImageView aadharImage;
@@ -39,6 +45,8 @@ public class ProfileActivity extends AppCompatActivity {
     StorageReference storageReference,storageRef;
     DatabaseReference vendorDetails;
     Bitmap bitmap;
+    int noOfImages;
+    Uri[] uris;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,24 +70,111 @@ public class ProfileActivity extends AppCompatActivity {
         //upload aadhar button is clicked
         //go to gallery to select a photo
 
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+        if (Build.VERSION.SDK_INT < 23) {
 
+            //go to gallery
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
+            startActivityForResult(Intent.createChooser(intent, "Select Pictures"), PICK_IMAGE_REQUEST);
+
+
+        } else {
+
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+
+                // Should we show an explanation?
+                if (shouldShowRequestPermissionRationale(
+                        Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    // Explain to the user why we need to read the contacts
+                }
+
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+
+                // MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE is an
+                // app-defined int constant that should be quite unique
+
+                return;
+            }
+            else {
+
+                //go to gallery
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+
+            }
+
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+
+        if (requestCode == MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                //go to gallery
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+
+            } else {
+                // Permission Denied
+                Toast.makeText(ProfileActivity.this, "Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        //picture selected
+        //images selected
 
         if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
-                && data != null && data.getData() != null )
+                && data != null)
         {
-            filePath = data.getData();
+
+            if (data.getClipData() != null){
+
+                noOfImages = data.getClipData().getItemCount();
+                filePath = data.getClipData().getItemAt(0).getUri();
+                uris = new Uri[noOfImages];
+                Log.i("number","" + noOfImages);
+
+                for (int i=0;i<noOfImages;i++){
+
+                    uris[i] = data.getClipData().getItemAt(i).getUri();
+
+                }
+
+            }
+            else if (data.getData() != null){
+
+                Log.i("no","1");
+                noOfImages = 1;
+                filePath = data.getData();
+                uris = new Uri[1];
+                uris[0] = filePath;
+            }
+
+            //filePath = data.getData();
+
             try {
+                Toast.makeText(this, noOfImages + " images selected", Toast.LENGTH_SHORT).show();
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 aadharImage.setImageBitmap(bitmap);
                 aadharImage.setVisibility(View.VISIBLE);
@@ -105,81 +200,105 @@ public class ProfileActivity extends AppCompatActivity {
                 progressDialog.setCanceledOnTouchOutside(false);
                 progressDialog.show();
 
-                StorageReference ref = storageReference.child("AadharPhoto");
-                ref.putFile(filePath)
-                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                for (int i = 1; i <= noOfImages; i++) {
 
+                    Uri uri = uris[i];
+                    final int finalI = i;
 
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                progressDialog.dismiss();
-                                Toast.makeText(ProfileActivity.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                        .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                                if (task.isSuccessful()){
+                    StorageReference ref = storageReference.child("IdProofs/" + i);
+                    ref.putFile(uri)
+                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                                    storageRef.child("Vendors/" + FirstRunSecondActivity.vendorName + "/AadharPhoto").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                        @Override
-                                        public void onSuccess(Uri uri) {
-
-                                            FirstRunSecondActivity.userUid = FirebaseAuth.getInstance().getUid();
-
-                                            vendorDetails = FirebaseDatabase.getInstance().getReference("Vendors/" + FirstRunSecondActivity.userUid);
-                                            vendorDetails.child("FirstName").setValue(firstName.getText().toString());
-                                            vendorDetails.child("LastName").setValue(lastName.getText().toString());
-                                            vendorDetails.child("VendorAddress").setValue(address.getText().toString());
-                                            vendorDetails.child("AadharNumber").setValue(aadharNumber.getText().toString());
-                                            vendorDetails.child("AadharUrl").setValue(uri.toString());
-                                            vendorDetails.child("Status").setValue("Pending");
-                                            vendorDetails.child("Name").setValue(FirstRunThirdActivity.name);
-                                            vendorDetails.child("Email").setValue(FirstRunThirdActivity.email);
-                                            vendorDetails.child("PhoneNumber").setValue(FirstRunThirdActivity.countryCodeMobileNumber);
-
-                                            progressDialog.dismiss();
-
-                                            aadharImage.setVisibility(View.GONE);
-
-                                            getSharedPreferences("User",MODE_PRIVATE)
-                                                    .edit()
-                                                    .putString("UserUid", FirstRunSecondActivity.userUid)
-                                                    .apply();
-
-                                            getSharedPreferences("VendorName",MODE_PRIVATE)
-                                                    .edit()
-                                                    .putString("Name", FirstRunSecondActivity.vendorName)
-                                                    .apply();
-
-
-                                            Intent intent = new Intent(ProfileActivity.this,UnVerifiedUser.class);
-                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                            startActivity(intent);
-
-                                            Toast.makeText(ProfileActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
 
                                 }
-                                else {
-                                    FirebaseAuth.getInstance().signOut();
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    progressDialog.dismiss();
+                                    Toast.makeText(ProfileActivity.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
-                            }
-                        })
-                        .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                                double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
-                                        .getTotalByteCount());
-                                progressDialog.setMessage("Uploaded "+(int)progress+"%");
-                            }
-                        });
+                            })
+                            .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                                    if (task.isSuccessful()){
+
+                                        storageRef.child("Vendors/" + FirstRunSecondActivity.vendorName + "/IdProofs/" + finalI).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                            @Override
+                                            public void onSuccess(Uri uri) {
+
+                                                FirstRunSecondActivity.userUid = FirebaseAuth.getInstance().getUid();
+
+                                                vendorDetails = FirebaseDatabase.getInstance().getReference("Vendors/" + FirstRunSecondActivity.userUid);
+
+                                                if (finalI==1){
+
+                                                    vendorDetails.child("AadharUrl").setValue(uri.toString());
+
+                                                }
+                                                else {
+
+                                                    vendorDetails.child("IdProof" + finalI).setValue(uri.toString());
+
+                                                }
+
+                                            }
+                                        });
+
+                                    }
+                                    else {
+                                        FirebaseAuth.getInstance().signOut();
+                                    }
+                                }
+                            })
+                            .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                                    double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
+                                            .getTotalByteCount());
+                                    progressDialog.setMessage("Uploaded "+(int)progress+"%");
+                                }
+                            });
+
+                }
+
+                vendorDetails = FirebaseDatabase.getInstance().getReference("Vendors/" + FirstRunSecondActivity.userUid);
+                vendorDetails.child("FirstName").setValue(firstName.getText().toString());
+                vendorDetails.child("LastName").setValue(lastName.getText().toString());
+                vendorDetails.child("VendorAddress").setValue(address.getText().toString());
+                vendorDetails.child("AadharNumber").setValue(aadharNumber.getText().toString());
+                vendorDetails.child("Status").setValue("Pending");
+                vendorDetails.child("Name").setValue(FirstRunThirdActivity.name);
+                vendorDetails.child("Email").setValue(FirstRunThirdActivity.email);
+                vendorDetails.child("PhoneNumber").setValue(FirstRunThirdActivity.countryCodeMobileNumber);
+
+                getSharedPreferences("User",MODE_PRIVATE)
+                        .edit()
+                        .putString("UserUid", FirstRunSecondActivity.userUid)
+                        .apply();
+
+                getSharedPreferences("VendorName",MODE_PRIVATE)
+                        .edit()
+                        .putString("Name", FirstRunSecondActivity.vendorName)
+                        .apply();
+
+                MainActivity.deviceTokenId = FirebaseInstanceId.getInstance().getToken();
+
+                FirebaseDatabase.getInstance().getReference("Vendors/" + FirstRunSecondActivity.userUid).child("TokenId").setValue(MainActivity.deviceTokenId);
+
+                progressDialog.dismiss();
+
+                aadharImage.setVisibility(View.GONE);
+
+                Intent intent = new Intent(ProfileActivity.this,UnVerifiedUser.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+
+                Toast.makeText(ProfileActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
+
             }
 
         }

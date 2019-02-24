@@ -21,27 +21,35 @@
                 android:scaleType="fitXY"
                 android:src="@drawable/room" />
 
-            <ImageButton
-                android:id="@+id/favourite_symbol1"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/ic_delete_black_24dp"
-                android:layout_alignParentRight="true"
-                android:layout_margin="10dp"
-                android:visibility="gone"
-                android:clickable="true" />
+                android:orientation="horizontal"
+                android:layout_alignParentRight="true">
 
-            <ImageButton
-                android:id="@+id/block_symbol1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_toLeftOf="@+id/favourite_symbol1"
-                android:background="@drawable/ic_block_black_24dp"
-                android:clickable="true"
-                android:visibility="gone" />
+                <ImageButton
+                    android:id="@+id/block_symbol1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_toLeftOf="@+id/favourite_symbol1"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/ic_block_black_24dp"
+                    android:clickable="true"
+                    android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/favourite_symbol1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_delete_black_24dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="10dp"
+                    android:visibility="gone"
+                    android:clickable="true" />
+
+            </LinearLayout>
+
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -100,6 +108,15 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/parkingAddress"
                 android:text="Ahmedabad"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/roomStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:text="Pending"
                 android:textSize="15sp" />
 
         </RelativeLayout>

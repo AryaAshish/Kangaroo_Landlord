@@ -17,6 +17,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     static {
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
+
+    static String deviceTokenId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,6 +172,10 @@ public class MainActivity extends AppCompatActivity {
                             if (dataSnapshot.child("Vendors").hasChild(userUid)){
 
                                 //user not deleted by admin
+
+                                deviceTokenId = FirebaseInstanceId.getInstance().getToken();
+
+                                FirebaseDatabase.getInstance().getReference("Vendors/" + userUid).child("TokenId").setValue(deviceTokenId);
 
                                 if ("Verified".equals(dataSnapshot.child("Vendors").child(userUid).child("Status").getValue(String.class))) {
 
