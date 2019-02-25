@@ -101,15 +101,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/uploadAadharButton"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/button_background"
             android:backgroundTint="@color/endColor"
             android:onClick="uploadAadhar"
-            android:text="UPLOAD AADHAR CARD PHOTO"
+            android:text="UPLOAD ID PROOF"
             android:textColor="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/text_view_agree_policy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:text="@string/idText"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="10sp"/>
 
         <ImageView
             android:id="@+id/aadharImage"

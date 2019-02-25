@@ -30,6 +30,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Arrays;
 import java.util.List;
@@ -435,6 +436,10 @@ public class FirstRunSecondActivity extends AppCompatActivity {
                             .edit()
                             .putString("Name",vendorName)
                             .apply();
+
+                    MainActivity.deviceTokenId = FirebaseInstanceId.getInstance().getToken();
+
+                    FirebaseDatabase.getInstance().getReference("Vendors/" + userUid).child("TokenId").setValue(MainActivity.deviceTokenId);
 
                 }
 

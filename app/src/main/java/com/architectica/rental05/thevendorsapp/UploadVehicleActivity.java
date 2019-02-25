@@ -50,7 +50,7 @@ import java.util.Map;
 public class UploadVehicleActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     private final int PICK_IMAGE_REQUEST = 71;
-    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
+    private final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     private Uri filePath;
     ImageView vehicleImage;
     FirebaseStorage storage;
@@ -189,7 +189,7 @@ public class UploadVehicleActivity extends AppCompatActivity implements AdapterV
             intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
-            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+            startActivityForResult(Intent.createChooser(intent, "Select Pictures"), PICK_IMAGE_REQUEST);
 
 
         } else {
