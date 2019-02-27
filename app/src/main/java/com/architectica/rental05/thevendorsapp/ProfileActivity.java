@@ -202,7 +202,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                 for (int i = 1; i <= noOfImages; i++) {
 
-                    Uri uri = uris[i];
+                    Uri uri = uris[i - 1];
                     final int finalI = i;
 
                     StorageReference ref = storageReference.child("IdProofs/" + i);
@@ -264,6 +264,8 @@ public class ProfileActivity extends AppCompatActivity {
                             });
 
                 }
+
+                FirstRunSecondActivity.userUid = FirebaseAuth.getInstance().getUid();
 
                 vendorDetails = FirebaseDatabase.getInstance().getReference("Vendors/" + FirstRunSecondActivity.userUid);
                 vendorDetails.child("FirstName").setValue(firstName.getText().toString());

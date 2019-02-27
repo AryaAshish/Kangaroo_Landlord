@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -89,6 +90,8 @@ public class FirstRunSecondActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_run_second);
 
+        MainActivity.isMainActivity = false;
+
         toolbar = (Toolbar) findViewById(R.id.my_toolbar);
 
         setSupportActionBar(toolbar);
@@ -172,6 +175,12 @@ public class FirstRunSecondActivity extends AppCompatActivity {
         }
         else {
 
+            //signup the user
+            pd = new ProgressDialog(FirstRunSecondActivity.this);
+            pd.setMessage("Please wait...");
+            pd.setCanceledOnTouchOutside(false);
+            pd.show();
+
             //register the user
 
             SignIn();
@@ -180,82 +189,95 @@ public class FirstRunSecondActivity extends AppCompatActivity {
     }
     public void SignIn() {
 
-        //check if user is registered
+        final Handler handler = new Handler();
 
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+        handler.postDelayed(new Runnable() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void run() {
 
-                isUserRegistered = false;
-                isUserVerified = "false";
+                //check if user is registered
 
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-
-                    String phoneNum = ds.child("PhoneNumber").getValue(String.class);
-
-                    if (fullNumber.equals(phoneNum)) {
-
-                        //user is registered
-
-                        isUserRegistered = true;
-
-                        if ("Verified".equals(ds.child("Status").getValue(String.class))){
-
-                            //user is registered and verified
-
-                            isUserVerified = "true";
-                            vendorName = ds.child("Name").getValue(String.class);
-                            break;
-
-                        }
-                        else {
-
-                            //user is registered but not verified
-
-                            isUserVerified = "false";
-                            break;
-                        }
-
-                    }
-                    else {
-
-                        //user is not registered
+                reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                         isUserRegistered = false;
+                        isUserVerified = "false";
+
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+
+                            String phoneNum = ds.child("PhoneNumber").getValue(String.class);
+
+                            if (fullNumber.equals(phoneNum)) {
+
+                                //user is registered
+
+                                isUserRegistered = true;
+
+                                if ("Verified".equals(ds.child("Status").getValue(String.class))){
+
+                                    //user is registered and verified
+
+                                    isUserVerified = "true";
+                                    vendorName = ds.child("Name").getValue(String.class);
+                                    break;
+
+                                }
+                                else {
+
+                                    //user is registered but not verified
+
+                                    isUserVerified = "false";
+                                    break;
+                                }
+
+                            }
+                            else {
+
+                                //user is not registered
+
+                                isUserRegistered = false;
+
+                            }
+
+                        }
+
+                        if(isUserRegistered){
+
+                            //ask the user to login instead of registering as a new user
+
+                            pd.dismiss();
+
+                            Toast.makeText(getApplicationContext(), "user is already registered", Toast.LENGTH_SHORT).show();
+
+                        } else {
+
+                            //register the new user
+
+                            pd.dismiss();
+
+                            Intent intent = new Intent(getApplicationContext(), FirstRunThirdActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            intent.putExtra(EXTRA_MESSAGE, message);
+                            intent.putExtra("number",PhoneNumber);
+                            intent.putExtra("countryCodeMobNumber",fullNumber);
+                            intent.putExtra("verificationIdSent",phoneVerificationId);
+                            intent.putExtra("reSendToken",resendingToken);
+                            startActivity(intent);
+                        }
 
                     }
 
-                }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                if(isUserRegistered){
+                        Toast.makeText(FirstRunSecondActivity.this, "database error", Toast.LENGTH_SHORT).show();
 
-                    //ask the user to login instead of registering as a new user
-
-                    Toast.makeText(getApplicationContext(), "user is already registered", Toast.LENGTH_SHORT).show();
-
-                } else {
-
-                    //register the new user
-
-                    Intent intent = new Intent(getApplicationContext(), FirstRunThirdActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    intent.putExtra(EXTRA_MESSAGE, message);
-                    intent.putExtra("number",PhoneNumber);
-                    intent.putExtra("countryCodeMobNumber",fullNumber);
-                    intent.putExtra("verificationIdSent",phoneVerificationId);
-                    intent.putExtra("reSendToken",resendingToken);
-                    startActivity(intent);
-                }
+                    }
+                });
 
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                Toast.makeText(FirstRunSecondActivity.this, "database error", Toast.LENGTH_SHORT).show();
-
-            }
-        });
+        },5000);
 
     }
 
@@ -313,78 +335,87 @@ public class FirstRunSecondActivity extends AppCompatActivity {
 
         //check if the user is a new user
 
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+        final Handler handler = new Handler();
+
+        handler.postDelayed(new Runnable() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void run() {
 
-                isUserRegistered = false;
-                isUserVerified = "false";
+                reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        isUserRegistered = false;
+                        isUserVerified = "false";
 
-                    String phoneNum = ds.child("PhoneNumber").getValue(String.class);
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
-                    if (fullNumber.equals(phoneNum)) {
+                            String phoneNum = ds.child("PhoneNumber").getValue(String.class);
 
-                        //user is registered
+                            if (fullNumber.equals(phoneNum)) {
 
-                        isUserRegistered = true;
+                                //user is registered
 
-                        if ("Verified".equals(ds.child("Status").getValue(String.class))){
+                                isUserRegistered = true;
+                                vendorName = ds.child("Name").getValue(String.class);
 
-                            //user is registered and verified
+                                if ("Verified".equals(ds.child("Status").getValue(String.class))){
 
-                            isUserVerified = "true";
-                            vendorName = ds.child("Name").getValue(String.class);
-                            break;
+                                    //user is registered and verified
+
+                                    isUserVerified = "true";
+                                    break;
+
+                                }
+                                else {
+
+                                    //user is registered but not verified
+
+                                    isUserVerified = "false";
+                                    break;
+                                }
+
+                            }
+                            else {
+
+                                //user is not registered
+
+                                isUserRegistered = false;
+
+                            }
+
+                        }
+
+
+                        if (isUserRegistered) {
+
+                            //user is registered
+                            //get users uid
+
+                            getUserUid();
 
                         }
                         else {
 
-                            //user is registered but not verified
+                            //ask the user to register
 
-                            isUserVerified = "false";
-                            break;
+                            pd.dismiss();
+                            Toast.makeText(getApplicationContext(), "Landlord not registered", Toast.LENGTH_SHORT).show();
                         }
 
                     }
-                    else {
 
-                        //user is not registered
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                        isUserRegistered = false;
+                        Toast.makeText(FirstRunSecondActivity.this, "database error", Toast.LENGTH_SHORT).show();
 
                     }
+                });
 
-                }
-
-
-                if (isUserRegistered) {
-
-                    //user is registered
-                    //get users uid
-
-                    getUserUid();
-
-                }
-                else {
-
-                    //ask the user to register
-
-                    pd.dismiss();
-                    Toast.makeText(getApplicationContext(), "Vendor not registered", Toast.LENGTH_SHORT).show();
-                }
 
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                Toast.makeText(FirstRunSecondActivity.this, "database error", Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
+        },5000);
 
     }
 

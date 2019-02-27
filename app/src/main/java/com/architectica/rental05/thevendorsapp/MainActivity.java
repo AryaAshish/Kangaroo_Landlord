@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     static String deviceTokenId;
+    static boolean isMainActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Log.d("MainActivity","yes");
+
+        isMainActivity = true;
 
         mOyo = (ImageView) findViewById(R.id.oyo_main) ;
         Boolean isFirstRun = getSharedPreferences("PREFERENCE", MODE_PRIVATE)
@@ -86,62 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
             } else {
 
-                //the app is not run for the first time
-                //check if there is a saved auth state
-
-                DatabaseReference statusReference = FirebaseDatabase.getInstance().getReference();
-
-                statusReference.child("Vendors").addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                        //incase the admin deletes the user at a time when the user is currently logged in,then the user is instantly logged out
-
-                        if (userUid != null){
-
-                            if (!dataSnapshot.hasChild(userUid)){
-
-                                getSharedPreferences("User",MODE_PRIVATE)
-                                        .edit()
-                                        .putString("UserUid",null)
-                                        .apply();
-
-                                getSharedPreferences("VendorName",MODE_PRIVATE)
-                                        .edit()
-                                        .putString("Name",null)
-                                        .apply();
-
-                                FirebaseAuth.getInstance().signOut();
-
-                                Toast.makeText(MainActivity.this, "You were logged out.Please login again", Toast.LENGTH_SHORT).show();
-
-                                Intent intent = new Intent(MainActivity.this,FirstRunSecondActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(intent);
-
-                            }
-
-                        }
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
-                String isUserUid = getSharedPreferences("User",MODE_PRIVATE)
-                        .getString("UserUid",null);
-
-                String VendorName = getSharedPreferences("VendorName",MODE_PRIVATE)
-                        .getString("Name",null);
-
-                FirstRunSecondActivity.vendorName = VendorName;
-
-                userUid = isUserUid;
-
-                if (isUserUid == null) {
+                if (userUid == null){
 
                     //no saved auth state
                     //show start activity
@@ -159,70 +108,111 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }, 3000);
 
-                } else {
+                }
+                else {
 
-                    //there is a saved auth state
+                    final DatabaseReference statusReference = FirebaseDatabase.getInstance().getReference("Vendors");
 
-                    //check if the saved auth state is currently active or deleted by the admin
+                    statusReference.keepSynced(true);
 
-                    statusReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
                         @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        public void run() {
+                            //Do something after 3000ms
 
-                            if (dataSnapshot.child("Vendors").hasChild(userUid)){
+                            //there is a saved auth state
+                            //check if admin deleted the landlord
 
-                                //user not deleted by admin
+                            //due to persistence,first the data in the cache is being used
 
-                                deviceTokenId = FirebaseInstanceId.getInstance().getToken();
+                            statusReference.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                                FirebaseDatabase.getInstance().getReference("Vendors/" + userUid).child("TokenId").setValue(deviceTokenId);
+                                    //incase the admin deletes the user at a time when the user is currently logged in,then the user is instantly logged out
 
-                                if ("Verified".equals(dataSnapshot.child("Vendors").child(userUid).child("Status").getValue(String.class))) {
+                                    DataSnapshot snapshot = dataSnapshot.child(userUid);
 
-                                    //user status is verified
+                                    Log.i("value","" + !snapshot.exists());
 
-                                    final Intent intent = new Intent(getApplicationContext(), FirstActivity.class);
-                                    new Timer().schedule(new TimerTask() {
-                                        public void run() {
-                                            MainActivity.this.runOnUiThread(new Runnable() {
-                                                public void run() {
-                                                    startActivity(intent);
-                                                    finish();
-                                                }
-                                            });
+                                    if (snapshot.exists()) {
+
+                                        if (isMainActivity){
+
+                                            //Log.i("name",FirstRunSecondActivity.vendorName);
+                                            //Log.i("number",FirstRunSecondActivity.fullNumber);
+
+                                            if ("Verified".equals(snapshot.child("Status").getValue(String.class))) {
+
+                                                //user status is verified
+
+                                                final Intent intent = new Intent(getApplicationContext(), FirstActivity.class);
+                                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                startActivity(intent);
+
+                                            } else {
+
+                                                //user status is not verified
+
+                                                Log.i("status","user not verified");
+
+                                                final Intent intent = new Intent(getApplicationContext(), UnVerifiedUser.class);
+                                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                startActivity(intent);
+
+                                            }
+
+
                                         }
-                                    }, 3000);
 
-                                } else {
 
-                                    //user status is not verified
+                                    }
+                                    else {
 
-                                    final Intent intent = new Intent(getApplicationContext(), UnVerifiedUser.class);
-                                    new Timer().schedule(new TimerTask() {
-                                        public void run() {
-                                            MainActivity.this.runOnUiThread(new Runnable() {
-                                                public void run() {
-                                                    startActivity(intent);
-                                                    finish();
-                                                }
-                                            });
-                                        }
-                                    }, 3000);
+                                        //admin deleted the user
+
+                                        Log.i("status","user deleted");
+
+                                        getSharedPreferences("User", MODE_PRIVATE)
+                                                .edit()
+                                                .putString("UserUid", null)
+                                                .apply();
+
+                                        getSharedPreferences("VendorName", MODE_PRIVATE)
+                                                .edit()
+                                                .putString("Name", null)
+                                                .apply();
+
+                                        getSharedPreferences("PhoneNumber", MODE_PRIVATE)
+                                                .edit()
+                                                .putString("Number", null)
+                                                .apply();
+
+                                        FirebaseAuth.getInstance().signOut();
+
+                                        Toast.makeText(MainActivity.this, "You were logged out.Please login again.", Toast.LENGTH_SHORT).show();
+
+                                        Intent intent = new Intent(MainActivity.this, FirstRunSecondActivity.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(intent);
+
+                                    }
 
                                 }
 
-                            }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+
 
                         }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-
+                    }, 5000);
 
                 }
+
             }
         }
         else {

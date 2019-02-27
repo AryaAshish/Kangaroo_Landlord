@@ -42,6 +42,8 @@ public class UnVerifiedUser extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_un_verified_user);
 
+        MainActivity.isMainActivity = false;
+
         toolbar = (Toolbar) findViewById(R.id.unverifiedToolbar);
 
         setSupportActionBar(toolbar);
