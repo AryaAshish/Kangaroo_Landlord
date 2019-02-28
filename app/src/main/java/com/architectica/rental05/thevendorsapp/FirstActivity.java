@@ -270,14 +270,7 @@ public class FirstActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId() == R.id.about){
-
-            //about description
-         //   Intent intent = new Intent(FirstActivity.this,AboutActivity.class);
-           // startActivity(intent);
-
-        }
-        else if (item.getItemId() == R.id.profile){
+        if (item.getItemId() == R.id.profile){
 
             //view your profile
             Intent intent = new Intent(this,UserProfile.class);

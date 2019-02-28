@@ -86,12 +86,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             if (title != "Your Location") {
                 mMap.addMarker(new MarkerOptions().position(userLocation).title(title));
-            } else {
+            }
+            else {
 
                 mMap.addMarker(new MarkerOptions().position(userLocation).title(title));
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 16));
 
             }
+
+            //pass the location details for uploading them to firebase
+
+            UploadVehicleActivity.locationLatitude = Double.toString(location.getLatitude());
+            UploadVehicleActivity.locationLongitude = Double.toString(location.getLongitude());
 
         }
         else {
@@ -241,11 +247,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         location.setLongitude(latLng.longitude);
 
         centerMapOnLocation(location,address);
-
-        //pass the location details for uploading them to firebase
-
-        UploadVehicleActivity.locationLatitude = Double.toString(latLng.latitude);
-        UploadVehicleActivity.locationLongitude = Double.toString(latLng.longitude);
 
     }
 }

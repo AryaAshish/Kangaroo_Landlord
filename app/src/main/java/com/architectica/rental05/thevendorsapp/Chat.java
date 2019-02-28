@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,7 +67,7 @@ public class Chat extends AppCompatActivity {
                 }
 
                 Firebase.setAndroidContext(getApplicationContext());
-                reference1 = new Firebase("https://kangaroorooms-288e3.firebaseio.com//Vendors/" + FirstRunSecondActivity.userUid + "/Chats/" + UserDetails.chatWith);
+                reference1 = new Firebase("https://kangaroorooms-288e3.firebaseio.com/Vendors/" + FirstRunSecondActivity.userUid + "/Chats/" + UserDetails.chatWith);
                 DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
 
                 reference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -81,7 +82,7 @@ public class Chat extends AppCompatActivity {
 
                                 if (UserDetails.chatWith.equals(snapshot1.getValue(String.class))){
 
-                                    reference2 = new Firebase("https://kangaroorooms-288e3.firebaseio.com//Users/" + snapshot.getKey() + "/Chats/" + UserDetails.username);
+                                    reference2 = new Firebase("https://kangaroorooms-288e3.firebaseio.com/Users/" + snapshot.getKey() + "/Chats/" + UserDetails.username);
 
                                     sendButton.setOnClickListener(new View.OnClickListener() {
                                         @Override
@@ -140,8 +141,6 @@ public class Chat extends AppCompatActivity {
                                     });
 
                                 }
-
-
 
                             }
 
