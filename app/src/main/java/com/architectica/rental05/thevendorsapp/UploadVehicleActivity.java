@@ -41,6 +41,10 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,14 +54,14 @@ import java.util.Map;
 public class UploadVehicleActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     private final int PICK_IMAGE_REQUEST = 71;
-    private final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
+    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     private Uri filePath;
     ImageView vehicleImage;
     FirebaseStorage storage;
     StorageReference storageReference,storageRef;
     EditText vehicleName,parkingAddress,cityName,pricePerHour,pricePerDay,noOfVehiclesAvailable,id;
     DatabaseReference uploadedVehicles;
-    String vehType,vehName,city;
+    String vehType;
     Bitmap bitmap;
     int noOfImages;
     int x=0,z=0;
@@ -189,7 +193,7 @@ public class UploadVehicleActivity extends AppCompatActivity implements AdapterV
             intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
-            startActivityForResult(Intent.createChooser(intent, "Select Pictures"), PICK_IMAGE_REQUEST);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
 
 
         } else {
@@ -197,11 +201,12 @@ public class UploadVehicleActivity extends AppCompatActivity implements AdapterV
             if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
                     != PackageManager.PERMISSION_GRANTED) {
 
+                /*
                 // Should we show an explanation?
                 if (shouldShowRequestPermissionRationale(
                         Manifest.permission.READ_EXTERNAL_STORAGE)) {
                     // Explain to the user why we need to read the contacts
-                }
+                }*/
 
                 requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                         MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
@@ -243,6 +248,8 @@ public class UploadVehicleActivity extends AppCompatActivity implements AdapterV
 
             } else {
                 // Permission Denied
+                Log.i("status","entered");
+
                 Toast.makeText(UploadVehicleActivity.this, "Permission Denied", Toast.LENGTH_SHORT).show();
             }
             return;
@@ -332,39 +339,7 @@ public class UploadVehicleActivity extends AppCompatActivity implements AdapterV
                 if (vehicleName.getText().toString().length() != 0 && pricePerHour.getText().toString().length() != 0 && pricePerDay.getText().toString().length() != 0 && parkingAddress.getText().toString().length() != 0 && cityName.getText().toString().length() != 0 && bitmap != null) {
 
                     if (locationLatitude != null && locationLongitude != null) {
-
-                        if (vehicleName.getText().toString().contains("$") || vehicleName.getText().toString().contains("#") || vehicleName.getText().toString().contains("[") || vehicleName.getText().toString().contains("]") || cityName.getText().toString().contains("$") || cityName.getText().toString().contains("#") || cityName.getText().toString().contains("[") || cityName.getText().toString().contains("]")){
-
-                            Toast.makeText(this, "Special characters " +"(#,$,[,])" + " are not allowed.", Toast.LENGTH_SHORT).show();
-
-                        }
-                        else if (vehicleName.getText().toString().contains(".") || cityName.getText().toString().contains(".")){
-
-                            if (cityName.getText().toString().contains(".")){
-
-                                Toast.makeText(this, "Special characters " +"(.,#,$,[,])" + " are not allowed in city name.", Toast.LENGTH_SHORT).show();
-
-                            }
-                            else {
-
-                                vehName = vehicleName.getText().toString();
-                                city = cityName.getText().toString();
-
-                                vehName = vehName.replace(".", " ");
-
-                                uploadVehicle("room");
-
-                            }
-
-                        }
-                        else {
-
-                            vehName = vehicleName.getText().toString();
-                            city = cityName.getText().toString();
-
-                            uploadVehicle("room");
-
-                        }
+                        uploadVehicle("room");
 
                     } else {
 
@@ -453,6 +428,9 @@ public class UploadVehicleActivity extends AppCompatActivity implements AdapterV
     public void uploadVehicle (final String Veh){
 
         //upload vehicle to  firebase
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 25, baos);
+        byte[] data = baos.toByteArray();
 
         if (filePath != null) {
             final ProgressDialog progressDialog = new ProgressDialog(this);
@@ -460,7 +438,7 @@ public class UploadVehicleActivity extends AppCompatActivity implements AdapterV
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.show();
 
-            storageReference.child(vehName).child("VehiclePhoto").putFile(filePath)
+            storageReference.child(vehicleName.getText().toString()).child("VehiclePhoto").putBytes(data)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -480,12 +458,12 @@ public class UploadVehicleActivity extends AppCompatActivity implements AdapterV
                         public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                             if (task.isSuccessful()) {
 
-                                storageRef.child("Vendors/" + FirstRunSecondActivity.vendorName + "/" + vehName + "/VehiclePhoto").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                storageRef.child("Vendors/" + FirstRunSecondActivity.vendorName + "/" + vehicleName.getText().toString() + "/VehiclePhoto").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {
                                         Map<String, String> vehicleDetails = new HashMap<String, String>();
                                         vehicleDetails.put("VehicleType", Veh);
-                                        vehicleDetails.put("VehicleName", vehName);
+                                        vehicleDetails.put("VehicleName", vehicleName.getText().toString());
                                         //vehicleDetails.put("VehicleNumber", vehicleNumber.getText().toString());
                                         vehicleDetails.put("ParkingAddress", parkingAddress.getText().toString());
                                         vehicleDetails.put("NoOfVehicles", noOfVehiclesAvailable.getText().toString());
@@ -495,7 +473,7 @@ public class UploadVehicleActivity extends AppCompatActivity implements AdapterV
                                             }
 
                                         }
-                                        vehicleDetails.put("City", city);
+                                        vehicleDetails.put("City", cityName.getText().toString());
                                         vehicleDetails.put("LocationLatitude", locationLatitude);
                                         vehicleDetails.put("LocationLongitude", locationLongitude);
                                         vehicleDetails.put("VehiclePhoto", uri.toString());
@@ -553,20 +531,20 @@ public class UploadVehicleActivity extends AppCompatActivity implements AdapterV
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                if (dataSnapshot.hasChild(city)){
+                if (dataSnapshot.hasChild(cityName.getText().toString())){
 
-                    DataSnapshot snapshot = dataSnapshot.child(city);
+                    DataSnapshot snapshot = dataSnapshot.child(cityName.getText().toString());
 
                     if (snapshot.hasChild("room")){
 
                         DataSnapshot snapshot1 = snapshot.child("room");
 
-                        if (snapshot1.hasChild(vehName)){
+                        if (snapshot1.hasChild(vehicleName.getText().toString())){
 
-                            DataSnapshot dataSnapshot1 = snapshot1.child(vehName);
+                            DataSnapshot dataSnapshot1 = snapshot1.child(vehicleName.getText().toString());
                             String noOfVehicles = dataSnapshot1.child("NoOfVehiclesAvailable").getValue(String.class);
                             String updatedNoOfVehicles = Integer.toString(Integer.parseInt(noOfVehicles) + Integer.parseInt(noOfVehiclesAvailable.getText().toString()));
-                            DatabaseReference referenceToUpdate = FirebaseDatabase.getInstance().getReference(city + "/room/" + vehName);
+                            DatabaseReference referenceToUpdate = FirebaseDatabase.getInstance().getReference(cityName.getText().toString() + "/room/" + vehicleName.getText().toString());
                             referenceToUpdate.child("NoOfVehiclesAvailable").setValue(updatedNoOfVehicles);
                             Map<String,String> map = new HashMap<String, String>();
                             map.put("Address",parkingAddress.getText().toString());
@@ -614,7 +592,11 @@ public class UploadVehicleActivity extends AppCompatActivity implements AdapterV
                     newVehicle(url,uid);
                 }
 
-                extraImages(noOfImages, uris2,uid);
+                try {
+                    extraImages(noOfImages, uris2,uid);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
             }
 
@@ -636,7 +618,7 @@ public class UploadVehicleActivity extends AppCompatActivity implements AdapterV
         map.put("VehiclePhoto",url);
         //map.put("isAddedToFavourites","false");
 
-        DatabaseReference referenceToUpdate = FirebaseDatabase.getInstance().getReference(city + "/room/" + vehName);
+        DatabaseReference referenceToUpdate = FirebaseDatabase.getInstance().getReference(cityName.getText().toString() + "/room/" + vehicleName.getText().toString());
 
         // DatabaseReference uploadReference = FirebaseDatabase.getInstance().getReference(cityName.getText().toString() + "/" + vehicleType.getText().toString());
 
@@ -675,7 +657,7 @@ public class UploadVehicleActivity extends AppCompatActivity implements AdapterV
 
     }
 
-    public void extraImages(int allData, Uri[] uris1, final String uid) {
+    public void extraImages(int allData, Uri[] uris1, final String uid) throws IOException {
 
         for (int i = 0; i < allData; i++) {
             Uri uri = uris1[i];
@@ -683,10 +665,15 @@ public class UploadVehicleActivity extends AppCompatActivity implements AdapterV
             mList.add(new ImageModel(nameFile));
             mListStatus.add("uploading");*/
 
+            Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.JPEG, 25, baos);
+            byte[] data = baos.toByteArray();
+
             //FireBase Storage
             final int finalI = i;
 
-            FirebaseStorage.getInstance().getReference("Vendors/" + FirstRunSecondActivity.vendorName + "/" + vehName + "/" + parkingAddress.getText().toString() + "/ExtraImages/" + uid + "/" + "ExtraImage" + i).putFile(uri)
+            FirebaseStorage.getInstance().getReference("Vendors/" + FirstRunSecondActivity.vendorName + "/" + vehicleName.getText().toString() + "/" + parkingAddress.getText().toString() + "/ExtraImages/" + uid + "/" + "ExtraImage" + i).putBytes(data)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
@@ -700,11 +687,11 @@ public class UploadVehicleActivity extends AppCompatActivity implements AdapterV
 
                             if (task.isSuccessful()) {
 
-                                storageRef.child("Vendors/" + FirstRunSecondActivity.vendorName + "/" + vehName + "/" + parkingAddress.getText().toString() + "/ExtraImages/" + uid + "/" + "ExtraImage" + finalI).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                storageRef.child("Vendors/" + FirstRunSecondActivity.vendorName + "/" + vehicleName.getText().toString() + "/" + parkingAddress.getText().toString() + "/ExtraImages/" + uid + "/" + "ExtraImage" + finalI).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(final Uri uri) {
 
-                                        DatabaseReference extraReference = FirebaseDatabase.getInstance().getReference(city + "/room/" + vehName + "/ExtraImages");
+                                        DatabaseReference extraReference = FirebaseDatabase.getInstance().getReference(cityName.getText().toString() + "/room/" + vehicleName.getText().toString() + "/ExtraImages");
 
                                         extraReference.push().child(FirstRunSecondActivity.vendorName).setValue(uri.toString());
 
@@ -717,7 +704,7 @@ public class UploadVehicleActivity extends AppCompatActivity implements AdapterV
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-                                                    if (vehName.equals(snapshot.child("VehicleName").getValue(String.class))) {
+                                                    if (vehicleName.getText().toString().equals(snapshot.child("VehicleName").getValue(String.class))) {
 
                                                         DatabaseReference vendorReference = snapshot.getRef();
 
@@ -773,7 +760,7 @@ public class UploadVehicleActivity extends AppCompatActivity implements AdapterV
 
                     for (DataSnapshot snapshot1 : dataSnapshot1.getChildren()){
 
-                        if (vehName.equals(snapshot1.child("VehicleName").getValue(String.class))){
+                        if (vehicleName.getText().toString().equals(snapshot1.child("VehicleName").getValue(String.class))){
 
                             String noOfVehicles = snapshot1.child("NoOfVehiclesAvailable").getValue(String.class);
                             String updatedNoOfVehicles = Integer.toString(Integer.parseInt(noOfVehicles) + Integer.parseInt(noOfVehiclesAvailable.getText().toString()));
@@ -791,7 +778,6 @@ public class UploadVehicleActivity extends AppCompatActivity implements AdapterV
                 vehicleImage.setVisibility(View.GONE);
 
                 finish();
-
             }
 
             @Override
@@ -799,7 +785,6 @@ public class UploadVehicleActivity extends AppCompatActivity implements AdapterV
 
             }
         });
-
 
     }
 
