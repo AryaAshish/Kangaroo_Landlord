@@ -11,6 +11,7 @@
     <string name="deny_sms">To auto detect OTP,please provide\n
         permission to read SMS. </string>
     <string name="saved_hotel_txt_2">Click on the </string>
+
     <string-array name="countries_list">
         <item>Afghanistan</item>
         <item>Albania</item>

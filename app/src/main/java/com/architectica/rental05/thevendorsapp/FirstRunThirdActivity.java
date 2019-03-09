@@ -160,8 +160,19 @@ public class FirstRunThirdActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                mEditTextSixDigitCode.setPaddingRelative(0, 0, 0, 0);
-                mEditTextSixDigitCode.setLetterSpacing(1);
+
+                if (Build.VERSION.SDK_INT >= 16){
+
+                    mEditTextSixDigitCode.setPaddingRelative(0, 0, 0, 0);
+
+                }
+
+                if (Build.VERSION.SDK_INT >= 21){
+
+                    mEditTextSixDigitCode.setLetterSpacing(1);
+
+                }
+
                 mEditTextSixDigitCode.setTextSize(20);
             }
 
@@ -169,7 +180,11 @@ public class FirstRunThirdActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
                 if (mEditTextSixDigitCode.length() == 0) {
                     mEditTextSixDigitCode.setPadding(10, 0, 0, 0);
-                    mEditTextSixDigitCode.setLetterSpacing(0);
+                    if (Build.VERSION.SDK_INT >= 21){
+
+                        mEditTextSixDigitCode.setLetterSpacing(1);
+
+                    }
                     mEditTextSixDigitCode.setTextSize(12);
                 }
             }

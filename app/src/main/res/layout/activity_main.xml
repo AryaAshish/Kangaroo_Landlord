@@ -16,14 +16,5 @@
         android:textColor="#FFFFFF"
         android:textSize="40sp"
         android:textStyle="bold" />
-    <TextView
-        android:layout_alignParentBottom="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="22dp"
-        android:text="by architecticasoftwares.com"
-        android:textColor="#000000"
-        android:textStyle="bold"
-        android:typeface="monospace" />
 
 </RelativeLayout>

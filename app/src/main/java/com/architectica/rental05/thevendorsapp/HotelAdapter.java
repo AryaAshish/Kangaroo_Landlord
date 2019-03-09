@@ -35,7 +35,7 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelItemVie
 
     private List<Integer> mDelete;
     private List<Integer> mBlock;
-   // List<String> mRoomIds;
+    // List<String> mRoomIds;
     List<String> mHotelNames;
     List<String> mHotelLocations;
     List<String> mOriginalRates;
@@ -86,7 +86,6 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelItemVie
         public final TextView mOriginalCost;
         public final TextView mReducedCost;
         public final TextView mHotelLocation;
-        public final TextView mRoomStatus;
         public final LinearLayout mHotelDetailsLayout;
 
         public HotelItemViewHolder(View itemView,HotelAdapter adapter) {
@@ -101,7 +100,6 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelItemVie
             mHotelLocation = (TextView) itemView.findViewById(R.id.parkingAddress);
             mHotelDetailsLayout = (LinearLayout) itemView.findViewById(R.id.hotel_details);
             blockSymbol = (ImageView)itemView.findViewById(R.id.block_symbol1);
-            mRoomStatus = (TextView)itemView.findViewById(R.id.roomStatus);
 
         }
     }
@@ -177,7 +175,6 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelItemVie
                         //disable the add to favourites button
                         holder.favouriteSymbol.setVisibility(View.GONE);
                         holder.blockSymbol.setVisibility(View.GONE);
-                        holder.mRoomStatus.setVisibility(View.GONE);
 
                     }
                     else if(mCurrentHotelName.equals(dataSnapshot1.child("VehicleName").getValue(String.class)) && "false".equals(dataSnapshot1.child("isVehicleBooked").getValue(String.class)) && mCurrentVehType.equals(dataSnapshot1.child("VehicleType").getValue(String.class)) && mCurrentCity.equals(dataSnapshot1.child("City").getValue(String.class)) && mCurrentHotelLocation.equals(dataSnapshot1.child("ParkingAddress").getValue(String.class))){
@@ -185,15 +182,12 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelItemVie
                         //current vehicle is not booked
                         //give the option to delete the vehicle
 
-                        holder.favouriteSymbol.setVisibility(View.GONE);
+                        holder.favouriteSymbol.setVisibility(View.VISIBLE);
                         holder.favouriteSymbol.setImageResource(mCurrentDelete);
 
                         holder.blockSymbol.setVisibility(View.VISIBLE);
                         //holder.blockSymbol.setImageResource(mCurrentBlock);
                         holder.blockSymbol.setBackgroundResource(mCurrentBlock);
-
-                        holder.mRoomStatus.setVisibility(View.VISIBLE);
-                        holder.mRoomStatus.setText(VehiclesForRentActivity.roomStatuses.get(position));
 
                     }
 
