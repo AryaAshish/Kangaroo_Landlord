@@ -3,6 +3,7 @@ package com.architectica.rental05.thevendorsapp;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -80,6 +81,7 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelItemVie
         public final ImageView hotelImageView;
         public final ImageView favouriteSymbol;
         public final ImageView blockSymbol;
+        public final ImageView editSymbol;
         final HotelAdapter mAdapter;
         public final TextView mHotelName;
         public final TextView mHotelCity;
@@ -100,6 +102,7 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelItemVie
             mHotelLocation = (TextView) itemView.findViewById(R.id.parkingAddress);
             mHotelDetailsLayout = (LinearLayout) itemView.findViewById(R.id.hotel_details);
             blockSymbol = (ImageView)itemView.findViewById(R.id.block_symbol1);
+            editSymbol = (ImageView)itemView.findViewById(R.id.edit);
 
         }
     }
@@ -541,6 +544,20 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelItemVie
                     Toast.makeText(context, "This room is blocked by the admin.please contact the admin", Toast.LENGTH_SHORT).show();
 
                 }
+
+            }
+        });
+
+        holder.editSymbol.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                name = mCurrentHotelName;
+                type = mCurrentVehType;
+                city = mCurrentCity;
+
+                Intent intent = new Intent(context,EditActivity.class);
+                context.startActivity(intent);
 
             }
         });

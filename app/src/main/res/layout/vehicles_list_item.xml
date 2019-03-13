@@ -21,6 +21,17 @@
                 android:scaleType="fitXY"
                 android:src="@drawable/room" />
 
+            <TextView
+                android:id="@+id/roomStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:text="Pending"
+                android:textColor="@color/shade_red1"
+                android:textSize="15sp" />
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -76,6 +87,16 @@
                     android:textStyle="bold"
                     android:textSize="15sp"/>
 
+                <ImageButton
+                    android:id="@+id/edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_edit_black_24dp"
+                    android:clickable="true"
+                    android:layout_toRightOf="@+id/pricePerDay"
+                    android:layout_below="@+id/pricePerHour"
+                    android:layout_marginLeft="15dp"/>
+
             </RelativeLayout>
 
         </RelativeLayout>
@@ -108,15 +129,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/parkingAddress"
                 android:text="Ahmedabad"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/roomStatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="20dp"
-                android:text="Pending"
                 android:textSize="15sp" />
 
         </RelativeLayout>

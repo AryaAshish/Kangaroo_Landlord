@@ -7,9 +7,9 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.MANAGE_DOCUMENTS"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -28,7 +28,7 @@
         android:theme="@style/AppTheme"
         tools:replace="android:label">
         <activity
-            android:name="com.architectica.rental05.thevendorsapp.MainActivity"
+            android:name=".MainActivity"
             android:theme="@style/noAnimTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,45 +37,45 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.architectica.rental05.thevendorsapp.FirstRunSecondActivity"
+            android:name=".FirstRunSecondActivity"
             android:label=" "
             android:screenOrientation="portrait"
             android:theme="@style/FirstRumTheme" />
         <activity
-            android:name="com.architectica.rental05.thevendorsapp.FirstRunThirdActivity"
+            android:name=".FirstRunThirdActivity"
             android:label=" "
-            android:parentActivityName="com.architectica.rental05.thevendorsapp.FirstRunSecondActivity"
+            android:parentActivityName=".FirstRunSecondActivity"
             android:screenOrientation="portrait"
             android:theme="@style/FirstRumTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.architectica.rental05.thevendorsapp.ProfileActivity"
+            android:name=".ProfileActivity"
             android:theme="@style/FirstRumTheme" />
         <activity
-            android:name="com.architectica.rental05.thevendorsapp.FirstActivity"
+            android:name=".FirstActivity"
             android:label=""
             android:theme="@style/FirstRumTheme" />
         <activity
-            android:name="com.architectica.rental05.thevendorsapp.UnVerifiedUser"
+            android:name=".UnVerifiedUser"
             android:label=" "
             android:theme="@style/FirstRumTheme" />
         <activity
-            android:name="com.architectica.rental05.thevendorsapp.UploadVehicleActivity"
+            android:name=".UploadVehicleActivity"
             android:theme="@style/FirstRumTheme" />
         <activity
-            android:name="com.architectica.rental05.thevendorsapp.BookedVehiclesActivity"
+            android:name=".BookedVehiclesActivity"
             android:theme="@style/FirstRumTheme" />
         <activity
-            android:name="com.architectica.rental05.thevendorsapp.VehiclesForRentActivity"
+            android:name=".VehiclesForRentActivity"
             android:theme="@style/FirstRumTheme" />
         <activity
-            android:name="com.architectica.rental05.thevendorsapp.chatsList"
+            android:name=".chatsList"
             android:theme="@style/FirstRumTheme" />
         <activity
-            android:name="com.architectica.rental05.thevendorsapp.Chat"
+            android:name=".Chat"
             android:theme="@style/FirstRumTheme" />
         <activity
-            android:name="com.architectica.rental05.thevendorsapp.UserProfile"
+            android:name=".UserProfile"
             android:theme="@style/FirstRumTheme" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -90,17 +90,28 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name="com.architectica.rental05.thevendorsapp.MapsActivity"
+            android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity
-            android:name="com.architectica.rental05.thevendorsapp.AboutActivity"
+            android:name=".AboutActivity"
             android:theme="@style/FirstRumTheme" />
-        <activity android:name="com.architectica.rental05.thevendorsapp.HotelActivity_1"
-            android:theme="@style/FirstRumTheme"/>
         <activity
-            android:name="com.architectica.rental05.thevendorsapp.TodaysBookings"
+            android:name=".HotelActivity_1"
             android:theme="@style/FirstRumTheme" />
-        <activity android:name="com.architectica.rental05.thevendorsapp.DisplayImages"
+        <activity
+            android:name=".TodaysBookings"
+            android:theme="@style/FirstRumTheme" />
+        <activity
+            android:name=".DisplayImages"
+            android:theme="@style/FirstRumTheme" />
+
+        <service android:name=".FirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity android:name=".EditActivity"
             android:theme="@style/FirstRumTheme"></activity>
     </application>
 

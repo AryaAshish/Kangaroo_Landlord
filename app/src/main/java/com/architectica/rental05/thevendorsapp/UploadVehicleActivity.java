@@ -1,6 +1,7 @@
 package com.architectica.rental05.thevendorsapp;
 
 import android.Manifest;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -21,10 +22,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -47,6 +50,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +63,8 @@ public class UploadVehicleActivity extends AppCompatActivity implements AdapterV
     ImageView vehicleImage;
     FirebaseStorage storage;
     StorageReference storageReference,storageRef;
-    EditText vehicleName,parkingAddress,cityName,pricePerHour,pricePerDay,noOfVehiclesAvailable,id;
+    EditText vehicleName,parkingAddress,cityName,pricePerDay,noOfVehiclesAvailable,id;
+    TextView availability;
     DatabaseReference uploadedVehicles;
     String vehType;
     Bitmap bitmap;
@@ -75,7 +80,9 @@ public class UploadVehicleActivity extends AppCompatActivity implements AdapterV
     int noOfVehicleNumbers;
     LinearLayout vehNoLayout;
     CheckBox[] cb =new CheckBox[7];
-    String name,address,city;
+    String name,address,city,from;
+    int availableFromYear,availableFromMonth,availableFromDay;
+    String availableFromDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,10 +96,20 @@ public class UploadVehicleActivity extends AppCompatActivity implements AdapterV
         //vehicleNumber = (EditText)findViewById(R.id.vehicleNumber);
         parkingAddress = (EditText)findViewById(R.id.parkingAddress);
         cityName = (EditText)findViewById(R.id.cityName);
-        pricePerHour = (EditText)findViewById(R.id.pricePerHour);
+        availability = (TextView)findViewById(R.id.available_from_text_view);
         pricePerDay = (EditText)findViewById(R.id.pricePerDay);
         noOfVehiclesAvailable = (EditText)findViewById(R.id.noOfVehicles);
         id = (EditText)findViewById(R.id.id);
+
+        Calendar cal = Calendar.getInstance();
+
+        availableFromYear = cal.get(Calendar.YEAR);
+        availableFromMonth = cal.get(Calendar.MONTH) + 1;
+        availableFromDay = cal.get(Calendar.DAY_OF_MONTH);
+
+        availableFromDate = availableFromDay + "-" + availableFromMonth + "-" + availableFromYear;
+
+        availability.setText(availableFromDate);
 
         storageRef = storage.getReference();
         cb[0]=(CheckBox)findViewById(R.id.cb1);
@@ -101,7 +118,6 @@ public class UploadVehicleActivity extends AppCompatActivity implements AdapterV
         cb[3]=(CheckBox)findViewById(R.id.cb4);
         cb[4]=(CheckBox)findViewById(R.id.cb5);
         cb[5]=(CheckBox)findViewById(R.id.cb6);
-
 
         etList = new ArrayList<EditText>();
         locationLatitude = null;
@@ -327,6 +343,34 @@ public class UploadVehicleActivity extends AppCompatActivity implements AdapterV
        }
 
    */
+
+    public void PickUpActivity(View view) {
+
+        final Calendar c = Calendar.getInstance();
+
+        availableFromYear = c.get(Calendar.YEAR);
+        availableFromMonth = c.get(Calendar.MONTH);
+        availableFromDay = c.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(UploadVehicleActivity.this,android.R.style.Theme_Holo_Dialog_MinWidth,new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+                availableFromYear = year;
+                availableFromMonth = monthOfYear + 1;
+                availableFromDay = dayOfMonth;
+
+                availableFromDate = availableFromDay + "-" + availableFromMonth + "-" + availableFromYear;
+
+                availability.setText(availableFromDate);
+
+            }
+        },availableFromYear,availableFromMonth,availableFromDay);
+
+        datePickerDialog.show();
+    }
+
+
     public void submitVehicle(View view){
 
         //upload vehicle button is clicked
@@ -337,13 +381,14 @@ public class UploadVehicleActivity extends AppCompatActivity implements AdapterV
             // x=0;
             if (NoOfVehicles != 0) {
 
-                if (vehicleName.getText().toString().length() != 0 && pricePerHour.getText().toString().length() != 0 && pricePerDay.getText().toString().length() != 0 && parkingAddress.getText().toString().length() != 0 && cityName.getText().toString().length() != 0 && bitmap != null) {
+                if (vehicleName.getText().toString().length() != 0 && !availability.getText().toString().equals("-NA-") && pricePerDay.getText().toString().length() != 0 && parkingAddress.getText().toString().length() != 0 && cityName.getText().toString().length() != 0 && bitmap != null) {
 
                     if (locationLatitude != null && locationLongitude != null) {
 
                         name = vehicleName.getText().toString();
                         address = parkingAddress.getText().toString();
                         city = cityName.getText().toString();
+                        from = availability.getText().toString();
 
                         name = name.replace("."," ");
                         name = name.replace("#"," ");
@@ -506,7 +551,7 @@ public class UploadVehicleActivity extends AppCompatActivity implements AdapterV
                                         vehicleDetails.put("LocationLongitude", locationLongitude);
                                         vehicleDetails.put("VehiclePhoto", uri.toString());
                                         vehicleDetails.put("isVehicleBooked", "false");
-                                        vehicleDetails.put("PricePerHour", pricePerHour.getText().toString());
+                                        vehicleDetails.put("PricePerHour", from);
                                         vehicleDetails.put("PricePerDay", pricePerDay.getText().toString());
                                         vehicleDetails.put("isVehicleBlocked", "false");
                                         vehicleDetails.put("status","Pending");
@@ -645,7 +690,7 @@ public class UploadVehicleActivity extends AppCompatActivity implements AdapterV
 
         Map<String,String> map = new HashMap<String, String>();
         map.put("NoOfVehiclesAvailable",noOfVehiclesAvailable.getText().toString());
-        map.put("PricePerHour",pricePerHour.getText().toString());
+        map.put("PricePerHour",from);
         map.put("PricePerDay",pricePerDay.getText().toString());
         //map.put("VehicleNumber",vehicleNumber.getText().toString());
         map.put("VehiclePhoto",url);

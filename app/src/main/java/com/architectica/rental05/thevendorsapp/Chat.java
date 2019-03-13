@@ -74,7 +74,7 @@ public class Chat extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull com.google.firebase.database.DataSnapshot dataSnapshot) {
 
-                        for (com.google.firebase.database.DataSnapshot snapshot : dataSnapshot.getChildren()){
+                        for (final com.google.firebase.database.DataSnapshot snapshot : dataSnapshot.getChildren()){
 
                             com.google.firebase.database.DataSnapshot dataSnapshot1 = snapshot.child("Name");
 
@@ -94,8 +94,8 @@ public class Chat extends AppCompatActivity {
                                                 Map<String, String> map = new HashMap<String, String>();
                                                 map.put("message", messageText);
                                                 map.put("user", UserDetails.username);
-                                                reference1.push().setValue(map);
-                                                reference2.push().setValue(map);
+                                                reference1.child(snapshot.getKey()).setValue(map);
+                                                reference2.child(snapshot.getKey()).setValue(map);
                                                 messageArea.setText("");
                                             }
                                         }

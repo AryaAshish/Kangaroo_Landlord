@@ -76,7 +76,8 @@
             android:textColor="#E53935"
             android:textSize="15sp"
             android:text="Have a referral code?"
-            android:onClick="openReferralCodeEditText"/>
+            android:onClick="openReferralCodeEditText"
+            android:visibility="gone"/>
 
         <EditText
             android:id="@+id/edit_text_referral_code"

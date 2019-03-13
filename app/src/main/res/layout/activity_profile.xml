@@ -68,6 +68,19 @@
             android:drawablePadding="20dp"
             android:background="@drawable/linear_layout_in_activity_first_run_second_background"/>
 
+        <EditText
+            android:id="@+id/agentId"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:hint="Agent Id (If any)"
+            android:textSize="12sp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="15dp"
+            android:paddingLeft="20dp"
+            android:drawableLeft="@drawable/ic_person_outline_black_24dp"
+            android:drawablePadding="20dp"
+            android:background="@drawable/linear_layout_in_activity_first_run_second_background"/>
 
         <EditText
             android:id="@+id/edit_text_address"

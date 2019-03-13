@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="fill_parent"
+    android:layout_width="fill_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fillViewport="false"
+    android:orientation="vertical"
+    tools:context="com.architectica.rental05.thevendorsapp.FirstRunThirdActivity">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/first_run_third_activity"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        tools:context="com.architectica.rental05.thevendorsapp.FirstRunThirdActivity">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/my_toolbar"
+            android:layout_width="fill_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#FFFFFF"
+            android:elevation="1dp"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Edit Rent"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:typeface="monospace"
+                android:layout_centerHorizontal="true"
+                android:textSize="15sp"
+                />
+        </android.support.v7.widget.Toolbar>
+
+        <EditText
+            android:id="@+id/newRent"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:hint="New Rent"
+            android:textSize="12sp"
+            android:inputType="number"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="15dp"
+            android:paddingLeft="20dp"
+            android:drawableLeft="@drawable/ic_location_city_black_24dp"
+            android:drawablePadding="20dp"
+            android:background="@drawable/linear_layout_in_activity_first_run_second_background"/>
+
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/button_background"
+            android:backgroundTint="#4CAF50"
+            android:onClick="updateRent"
+            android:text="UPDATE RENT"
+            android:textColor="#FFFFFF" />
+
+    </LinearLayout>
+
+</ScrollView>

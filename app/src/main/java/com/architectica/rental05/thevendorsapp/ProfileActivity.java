@@ -37,7 +37,7 @@ public class ProfileActivity extends AppCompatActivity {
     //String vendorUid;
     private final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     DatabaseReference vendorReference;
-    EditText firstName,lastName,address,aadharNumber;
+    EditText firstName,lastName,address,aadharNumber,agentId;
     ImageView aadharImage;
     private final int PICK_IMAGE_REQUEST = 71;
     private Uri filePath;
@@ -47,6 +47,7 @@ public class ProfileActivity extends AppCompatActivity {
     Bitmap bitmap;
     int noOfImages;
     Uri[] uris;
+    String agent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,7 @@ public class ProfileActivity extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference("Vendors/" + FirstRunSecondActivity.vendorName);
         storageRef = storage.getReference();
+        agentId = (EditText)findViewById(R.id.agentId);
     }
 
     public void uploadAadhar(View view){
@@ -266,6 +268,7 @@ public class ProfileActivity extends AppCompatActivity {
                 }
 
                 FirstRunSecondActivity.userUid = FirebaseAuth.getInstance().getUid();
+                agent = agentId.getText().toString();
 
                 vendorDetails = FirebaseDatabase.getInstance().getReference("Vendors/" + FirstRunSecondActivity.userUid);
                 vendorDetails.child("FirstName").setValue(firstName.getText().toString());
@@ -276,7 +279,12 @@ public class ProfileActivity extends AppCompatActivity {
                 vendorDetails.child("Name").setValue(FirstRunThirdActivity.name);
                 vendorDetails.child("Email").setValue(FirstRunThirdActivity.email);
                 vendorDetails.child("PhoneNumber").setValue(FirstRunThirdActivity.countryCodeMobileNumber);
-
+                if (agent.length() == 0){
+                    vendorDetails.child("AgentId").setValue("MainAdmin");
+                }
+                else {
+                    vendorDetails.child("AgentId").setValue(agent);
+                }
                 getSharedPreferences("User",MODE_PRIVATE)
                         .edit()
                         .putString("UserUid", FirstRunSecondActivity.userUid)
@@ -287,9 +295,9 @@ public class ProfileActivity extends AppCompatActivity {
                         .putString("Name", FirstRunSecondActivity.vendorName)
                         .apply();
 
-                MainActivity.deviceTokenId = FirebaseInstanceId.getInstance().getToken();
+                //MainActivity.deviceTokenId = FirebaseInstanceId.getInstance().getToken();
 
-                FirebaseDatabase.getInstance().getReference("Vendors/" + FirstRunSecondActivity.userUid).child("TokenId").setValue(MainActivity.deviceTokenId);
+                //FirebaseDatabase.getInstance().getReference("Vendors/" + FirstRunSecondActivity.userUid).child("TokenId").setValue(MainActivity.deviceTokenId);
 
                 progressDialog.dismiss();
 

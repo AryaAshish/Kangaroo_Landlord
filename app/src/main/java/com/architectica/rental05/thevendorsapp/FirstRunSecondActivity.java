@@ -468,9 +468,9 @@ public class FirstRunSecondActivity extends AppCompatActivity {
                             .putString("Name",vendorName)
                             .apply();
 
-                    MainActivity.deviceTokenId = FirebaseInstanceId.getInstance().getToken();
+                   // MainActivity.deviceTokenId = FirebaseInstanceId.getInstance().getToken();
 
-                    FirebaseDatabase.getInstance().getReference("Vendors/" + userUid).child("TokenId").setValue(MainActivity.deviceTokenId);
+                    //FirebaseDatabase.getInstance().getReference("Vendors/" + userUid).child("TokenId").setValue(MainActivity.deviceTokenId);
 
                 }
 
